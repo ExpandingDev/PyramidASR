@@ -1,0 +1,27 @@
+<node dest="ca.l5.expandingdev.Buckey.ASR" cppname="BuckeyASR" >
+	<interface name="ca.l5.expandingdev.Buckey.ASR" >
+		<method name="setInputBehavior" >
+			<arg name="type" type="y" direction="in" />
+			<arg name="success" type="y" direction="out" />
+		</method>
+
+		<method name="setInputSource" >
+			<arg name="source" type="s" direction="in" />
+			<arg name="success" type="y" direction="out" />
+		</method>
+
+		<method name="setInputGrammar" >
+			<arg name="grammarPath" type="s" direction="in" />
+			<arg name="grammarFormat" type="s" direction="in" />
+		</method>
+
+		<method name="setLanguageModel" >
+			<arg name="lmPath" type="s" direction="in" />
+			<arg name="format" type="s" direction="in" />
+		</method>
+
+		<method name="pauseRecognition" />
+		<method name="resumeRecognition" />
+
+	</interface>
+</node>
