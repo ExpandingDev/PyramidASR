@@ -1,0 +1,10 @@
+#ifndef CONFIG_HH
+#define CONFIG_HH
+
+#define PYRAMID_VERSION @Pyramid_VERSION@
+#define DEFAULT_RUNNING_DIRECTORY "/etc/pyramid"
+
+#define DEFAULT_LM_PATH @DEFAULT_LM_PATH@
+#define DEFAULT_HMM_PATH @DEFAULT_HMM_PATH@
+
+#endif
