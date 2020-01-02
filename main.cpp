@@ -24,8 +24,6 @@
 
 #define LOCK_FILE "pyramid.lock"
 
-// The resulting binary for the daemon should end up in /usr/sbin
-
 PyramidASRService * service;
 
 pid_t PID;
@@ -128,7 +126,7 @@ void doLoop() {
 
         syslog(LOG_DEBUG, "Reserved DBus name");
 
-        service = new PyramidASRService(conn);
+        service = new PyramidASRService();
 
         Buckey::ASRServiceAdapter::pointer a = Buckey::ASRServiceAdapter::create(service, "/ca/l5/expandingdev/PyramidASR");
 		if(!conn->register_object(a)) {
@@ -352,9 +350,9 @@ int main(int argc, char *argv[]) {
             openlog("pyramid", LOG_NDELAY | LOG_PID | LOG_CONS, LOG_USER);
             #ifdef ENABLE_DEBUG
                 std::cout << "Debug logging has been enabled" << std::endl;
-                setlogmask(LOG_DEBUG);
+                setlogmask(LOG_UPTO(LOG_DEBUG));
             #else
-                setlogmask(LOG_WARNING);
+                setlogmask(LOG_UPTO(LOG_WARNING));
             #endif
             doLoop();
         }
@@ -366,9 +364,9 @@ int main(int argc, char *argv[]) {
 		    openlog("pyramid", LOG_NDELAY | LOG_PID | LOG_CONS, LOG_USER);
             #ifdef ENABLE_DEBUG
                 std::cout << "Debug logging has been enabled" << std::endl;
-                setlogmask(LOG_DEBUG);
+                setlogmask(LOG_UPTO(LOG_DEBUG));
             #else
-                setlogmask(LOG_WARNING);
+                setlogmask(LOG_UPTO(LOG_WARNING));
             #endif
 			daemonize();
 		}
