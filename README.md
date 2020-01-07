@@ -3,9 +3,10 @@ A DBus interface for CMU Pocketsphinx speech recognition.
 
 ## Compilation
 Pyramid ASR relies upon the following libraries to run
-- dbus-cxx
-- pocketsphinx
-- sphinxbase
+- dbus-cxx *For DBus interface*
+- pocketsphinx *Speech recognition*
+- sphinxbase *Getting audio device for speech recognition*
+- GLib 2.0 *Parsing configuration files*
 
 Pyramid ASR uses a CMake build system, to build and install:  
 
