@@ -25,10 +25,10 @@ The main goal of Pyramid ASR is to function as a daemon for speech recognition s
 	-v		Display the current version of this program.
 	-a ADDRESS	Connect the Pyramid ASR Service to the specified custom DBus bus specified by the given address.
 
-If no options are supplied, a new Pyramid ASR Service instance will be made unless another Pyramid ASR Service instance is already running.
-Daemonization will fail if another Pyramid ASR Service instance is running.
-Addresses specified by the -a option should be DBus specification compliant, for example: pyramid -a unix:/tmp/pyramid.socket
-	Specifies to connect to a DBus through a UNIX socket located at /tmp/pyramid.socket
+If no options are supplied, a new Pyramid ASR Service instance will be made unless another Pyramid ASR Service instance is already running.  
+Daemonization will fail if another Pyramid ASR Service instance is running.  
+Addresses specified by the -a option should be DBus specification compliant, for example: `pyramid -a unix:/tmp/pyramid.socket`  
+Specifies to connect to a DBus through a UNIX socket located at `/tmp/pyramid.socket`
 
 
 
