@@ -25,12 +25,8 @@ class PyramidASRService : public Buckey::ASRService {
         void setLanguageModel(std::string lmpath);
         void setKeyword(std::string keyword);
         
-        ///TODO: Allow startListening to complain/return a value if the user has not specified a search mode yet
         void startListening();
         void stopListening();
-           
-        ///TODO: Add this to DBus, and add a status or something
-        bool isListening();
         
         PyramidASRService();	
         virtual ~PyramidASRService();
@@ -47,6 +43,8 @@ class PyramidASRService : public Buckey::ASRService {
         void updateJSGFPath(std::string path);
         void updateDictionary(std::string path);
         void applyUpdates();
+        
+        bool isListening();
            
         std::atomic<bool> running;
 	        

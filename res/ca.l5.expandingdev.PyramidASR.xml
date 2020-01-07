@@ -70,6 +70,10 @@
             <arg name="word" type="s" direction="in" />
             <arg name="exists" type="b" direction="out" />
         </method>
+
+        <method name="isListening" >
+            <arg name="listening" type="b" direction="out" />
+        </method>
 	    
 	</interface>	    
 </node>

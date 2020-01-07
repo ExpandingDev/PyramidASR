@@ -21,13 +21,17 @@
     temp_method->set_arg_name(0, "path");
     
     temp_method = this->create_method<bool,std::string,std::string>("ca.l5.expandingdev.PyramidASR", "addWord",sigc::mem_fun(adaptee, &PyramidASRService::addWord));
-    temp_method->set_arg_name(0, "return_value");
+    temp_method->set_arg_name(0, "success");
     temp_method->set_arg_name(1, "word");
     temp_method->set_arg_name(2, "phonemes");
     
     temp_method = this->create_method<bool,std::string>("ca.l5.expandingdev.PyramidASR", "wordExists",sigc::mem_fun(adaptee, &PyramidASRService::wordExists));
-    temp_method->set_arg_name(0, "return_value");
+    temp_method->set_arg_name(0, "exists");
     temp_method->set_arg_name(1, "word");
+    
+    temp_method = this->create_method<bool>("ca.l5.expandingdev.PyramidASR", "isListening",sigc::mem_fun(adaptee, &PyramidASRService::isListening));
+    temp_method->set_arg_name(0, "listening");
+    
 }
 
 std::shared_ptr<PyramidASRServiceAdapter> PyramidASRServiceAdapter::create(PyramidASRService * adaptee, std::string path){
