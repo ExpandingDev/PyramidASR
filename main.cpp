@@ -19,8 +19,7 @@
 #include <glib.h>
 
 #include "config.h"
-#include "ASRServiceAdapter.h"
-#include "PyramidASRService.h"
+#include "PyramidASRServiceAdapter.h"
 
 #define LOCK_FILE "pyramid.lock"
 
@@ -87,25 +86,7 @@ void doLoop() {
 	   
         if(customAddressSet) {
             syslog(LOG_DEBUG, "Attempting to connect to bus %s", CUSTOM_ADDRESS);  
-           
-            //Connect to custom bus, send org.freedesktop.DBus.Hello, request name
-    		DBusError err; 
-    		dbus_error_init(&err);
-    
-    		c = dbus_connection_open(CUSTOM_ADDRESS, &err);
-    		if(dbus_error_is_set(&err)) {
-    		    std::cerr << "Failed to connect to address " << CUSTOM_ADDRESS << std::endl;
-    			fprintf(stderr, "Connection Error (%s)\n", err.message);
-    			dbus_error_free(&err);
-    			exit(1);
-    		}
-    		syslog(LOG_DEBUG, "Connected to bus, attempting to send Hello...");
-    		
-    		conn = dispatcher->create_connection(c);
-    		if(!conn->is_registered()) { // Send org.freedesktop.Hello if we haven't already yet because we started out connection outside of dbus-cxx
-    		    conn->bus_register();
-    		}
-    		syslog(LOG_DEBUG, "Sent hello");
+            conn = dispatcher->create_connection(CUSTOM_ADDRESS);
         }
         else { // If no special address is specified, default to the session bus
 	        conn = dispatcher->create_connection(DBus::BUS_SESSION);
@@ -128,7 +109,7 @@ void doLoop() {
 
         service = new PyramidASRService();
 
-        Buckey::ASRServiceAdapter::pointer a = Buckey::ASRServiceAdapter::create(service, "/ca/l5/expandingdev/PyramidASR");
+        PyramidASRServiceAdapter::pointer a = PyramidASRServiceAdapter::create(service, "/ca/l5/expandingdev/PyramidASR");
 		if(!conn->register_object(a)) {
 			std::cerr << "Failed to register the PyramidASR object!" << std::endl;
 			syslog(LOG_ERR, "Failed to register the PyramidASR object onto the DBus!");
@@ -145,10 +126,6 @@ void doLoop() {
 
 		}
 		delete service;
-		
-		if(customAddressSet) { // Close the custom DBusConnection once we are done
-			dbus_connection_close(c);
-		}
     }
     catch (std::shared_ptr<DBus::Error> e) {
         std::cerr << "Caught DBusError: " << e->message() << std::endl;

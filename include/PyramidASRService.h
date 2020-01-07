@@ -11,11 +11,15 @@
 
 #define AUDIO_FRAME_SIZE 2048
 
+enum class ListeningMode {
+    CONTINUOUS, PUSH_TO_SPEAK
+};
+
 class PyramidASRService : public Buckey::ASRService {
 	public:
         //DBus
-        void setListeningBehavior(Buckey::ASRService::ListeningMode types);
-        void setRecognitionMode(Buckey::ASRService::RecognitionMode mode);
+        void setListeningMode(std::string mode);
+        void setRecognitionMode(std::string mode);
         
         void setGrammar(std::string jsgf);
         void setLanguageModel(std::string lmpath);
@@ -69,8 +73,8 @@ class PyramidASRService : public Buckey::ASRService {
         std::atomic<bool> listening; // Set to true while the management thread is running
         std::atomic<bool> paused;
         
-        Buckey::ASRService::RecognitionMode searchMode;
-        Buckey::ASRService::ListeningMode listeningMode;
+        SphinxHelper::SearchMode searchMode;
+        ListeningMode listeningMode;
            
         GKeyFile * configFile;
         const char * CONFIG_FILENAME = "pyramid.conf";

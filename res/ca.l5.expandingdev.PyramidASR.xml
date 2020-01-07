@@ -1,0 +1,75 @@
+<node cppname="PyramidASRService" namespace="Buckey" >
+	
+	<interface name="ca.l5.expandingdev.Buckey.ASR" >
+		
+		<!-- The below methods will mainly be used for push to speak listening behavior -->
+		<!-- Causes the service to start recording and processing audio. -->
+		<method name="startListening" ></method>
+		
+		<!-- Causes the service to stop recording and processing audio. -->		
+		<method name="stopListening" ></method>
+
+		<signal name="StateChanged" >
+			<!-- The "state" is an enum with the following values:
+				0 - Ready for recognition, 1 - loading, 2 - errored out
+			 -->
+			<arg name="state" type="y" direction="out" />
+		</signal>
+
+		<!-- Emitted when the speech recognition service thinks it has a match. -->
+		<signal name="Hypothesis" >
+			<arg name="best-match" type="s" direction="out" />
+		</signal>
+
+		<!-- Emitted when the speech recognition service detects speaking. -->
+		<signal name="SpeechStarted" />
+
+		<!-- Emitted when the speech recognition service detects that the service has stopped speaking. -->
+		<signal name="SpeechStopped" />
+
+		<!-- Emitted when the speech recognition service starts recording audio. -->
+		<signal name="ListeningStarted" />
+
+		<!-- Emitted when the speech recognition service is no longer recording audio. -->
+		<signal name="ListeningStopped" />
+	</interface>
+	<interface name="ca.l5.expandingdev.PyramidASR" >
+	    <method name="setGrammar" >
+	       <arg name="jsgf" type="s" direction="in" />
+	    </method>
+	    
+	    <method name="setLanguageModel" >
+	       <arg name="path" type="s" direction="in" />
+	    </method>
+	    
+	    <method name="setRecognitionMode" >
+	       <arg name="mode" type="s" direction="in" />
+	       <arg name="success" type="b" direction="out" />
+	    </method>
+	    
+	    <method name="setListeningMode" >
+	       <arg name="mode" type="s" direction="in" />
+	       <arg name="success" type="b" direction="out" />
+	    </method>
+	    
+        <method name="setAcousticModel" >
+            <arg name="path" type="s" direction="in" />
+        </method>	    
+        
+        <method name="setDictionary" >
+            <arg name="path" type="s" direction="in" />
+        </method>        
+        
+        <method name="addWord" >
+            <arg name="word" type="s" direction="in" />
+            <arg name="phonemes" type="s" direction="in" />
+            <arg name="success" type="b" direction="out" />
+        </method>
+        
+        <method name="wordExists" >
+            <arg name="word" type="s" direction="in" />
+            <arg name="exists" type="b" direction="out" />
+        </method>
+	    
+	</interface>	    
+</node>

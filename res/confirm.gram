@@ -1,0 +1,5 @@
+#JSGF v1.0;
+grammar confirm;
+public <command> = <positive> {yes} | <deny> {no};
+<positive> = yes | yeah | ok | positive | confirm | of course | please do | yes sir;
+<deny> = no | deny | reject | [please] don't | nope | do not;

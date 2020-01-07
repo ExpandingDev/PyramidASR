@@ -1,1 +1,6 @@
 [Default]
+dict=@DEFAULT_DICT_PATH@
+hmm=@DEFAULT_HMM_PATH@
+lm=@DEFAULT_LM_PATH@
+decoder-count=3
+device=default

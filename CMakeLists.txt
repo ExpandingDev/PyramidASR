@@ -5,7 +5,7 @@ project(Pyramid VERSION 0.1)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(pyramid main.cpp src/PyramidASRService.cpp src/SphinxDecoder.cpp)
+add_executable(pyramid main.cpp src/PyramidASRService.cpp src/PyramidASRServiceAdapter.cpp src/SphinxDecoder.cpp)
 
 target_include_directories(pyramid PUBLIC "${PROJECT_BINARY_DIR}" "${PROJECT_BINARY_DIR}/include")
 

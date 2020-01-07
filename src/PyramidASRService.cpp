@@ -103,8 +103,8 @@ PyramidASRService::PyramidASRService() : Buckey::ASRService(PYRAMID_VERSION, "py
         maxDecoders = m;
     }
 
-    listeningMode = Buckey::ASRService::ListeningMode::CONTINUOUS;
-    searchMode = Buckey::ASRService::RecognitionMode::LANGUAGE_MODEL;
+    listeningMode = ListeningMode::CONTINUOUS;
+    searchMode = SphinxHelper::SearchMode::LM;
     
     //Create our decoders
     for(unsigned short i = 0; i < maxDecoders; i++) {
@@ -356,7 +356,7 @@ void PyramidASRService::applyUpdates() {
 
 void PyramidASRService::startListening() {
     syslog(LOG_DEBUG, "startListening Called");
-    if(listeningMode == Buckey::ASRService::ListeningMode::PUSH_TO_SPEAK) {
+    if(listeningMode == ListeningMode::PUSH_TO_SPEAK) {
         paused.store(false);     
     }
     if(!isListening()) {
@@ -364,10 +364,10 @@ void PyramidASRService::startListening() {
         voiceDetected.store(false);
         listening.store(true);
         
-        if(listeningMode == Buckey::ASRService::ListeningMode::CONTINUOUS) {
+        if(listeningMode == ListeningMode::CONTINUOUS) {
             recognizerLoop = std::thread(continuousSpeechRecognition, this);
         }
-        else if(listeningMode == Buckey::ASRService::ListeningMode::PUSH_TO_SPEAK) {
+        else if(listeningMode == ListeningMode::PUSH_TO_SPEAK) {
             recognizerLoop = std::thread(pushToSpeakRecognition, this);
         }
         else {
@@ -375,7 +375,7 @@ void PyramidASRService::startListening() {
         }
     }
     else {
-        if(listeningMode == Buckey::ASRService::ListeningMode::PUSH_TO_SPEAK) {
+        if(listeningMode == ListeningMode::PUSH_TO_SPEAK) {
             ///TODO: Emit unpaused signal here
         }  
     }
@@ -386,7 +386,7 @@ void PyramidASRService::stopListening() {
     if(listening.load()) {
         voiceDetected.store(false);
         
-        if(listeningMode == Buckey::ASRService::ListeningMode::PUSH_TO_SPEAK) {
+        if(listeningMode == ListeningMode::PUSH_TO_SPEAK) {
             paused.store(true);
             ///TODO: Emit pause signal        
         }
@@ -408,21 +408,20 @@ void PyramidASRService::endAndGetHypothesis(PyramidASRService * sr, SphinxDecode
     sd->startUtterance();
 }
 
-void PyramidASRService::setRecognitionMode(Buckey::ASRService::RecognitionMode mode) {
+void PyramidASRService::setRecognitionMode(std::string mode) {
     //This changed the search mode
     
     syslog(LOG_DEBUG, "setRecognitionMode called");
+    
     SphinxHelper::SearchMode m;
-    switch(mode) {
-        case Buckey::ASRService::RecognitionMode::LANGUAGE_MODEL:
-            m = SphinxHelper::SearchMode::LM;
-            break;
-        case Buckey::ASRService::RecognitionMode::JSGF:
-            m = SphinxHelper::SearchMode::JSGF_STRING;
-            break;
-        default:
-            m = SphinxHelper::SearchMode::JSGF_STRING;
-            break;
+    if(mode == "lm") {
+        m = SphinxHelper::SearchMode::LM;    
+    }
+    else if(mode == "jsgf") {
+        m = SphinxHelper::SearchMode::JSGF_STRING;   
+    }
+    else {
+        m = SphinxHelper::SearchMode::JSGF_STRING;    
     }
     
     for(SphinxDecoder * sd : decoders) {
@@ -432,7 +431,15 @@ void PyramidASRService::setRecognitionMode(Buckey::ASRService::RecognitionMode m
     applyUpdates();
 }
 
-void PyramidASRService::setListeningBehavior(Buckey::ASRService::ListeningMode mode) {
+void PyramidASRService::setListeningMode(std::string m) {
+    ListeningMode mode = ListeningMode::CONTINUOUS;
+    if(m == "continuous") {
+        //No change cause CONTINUOUS is the default.      
+    }  
+    else if (m == "push to speak") {
+        mode = ListeningMode::PUSH_TO_SPEAK;    
+    }
+    
     //This changes the management thread
     syslog(LOG_DEBUG, "setListeningBehavior called");
     if(listeningMode != mode) {
@@ -443,10 +450,10 @@ void PyramidASRService::setListeningBehavior(Buckey::ASRService::ListeningMode m
             listeningMode = mode; // Switch modes
             
             //Start up the new recognition thread
-            if(listeningMode == Buckey::ASRService::ListeningMode::CONTINUOUS) {
+            if(listeningMode == ListeningMode::CONTINUOUS) {
                 recognizerLoop = std::thread(continuousSpeechRecognition, this);
             }
-            else if(listeningMode == Buckey::ASRService::ListeningMode::PUSH_TO_SPEAK) {
+            else if(listeningMode == ListeningMode::PUSH_TO_SPEAK) {
                 recognizerLoop = std::thread(pushToSpeakRecognition, this);
             }
             else {
